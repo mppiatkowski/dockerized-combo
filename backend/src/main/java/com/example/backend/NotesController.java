@@ -30,6 +30,18 @@ public class NotesController {
             .orElseThrow(() -> new NoteNotFoundException(id));
     }
 
+    @PutMapping("/{id}")
+    Note replaceEmployee(@RequestBody Note newNote, @PathVariable("id") Long id) {
+        return notesRepository.findById(id)
+        .map(note -> {
+            note.setTitle(newNote.getTitle());
+            note.setDescription(newNote.getDescription());
+            return notesRepository.save(note);
+        })
+        .orElseGet(() -> notesRepository.save(newNote));
+    }
+
+
     @DeleteMapping("/{id}")
     void deleteNote(@PathVariable("id") Long id) {
         notesRepository.deleteById(id);
