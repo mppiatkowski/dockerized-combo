@@ -6,6 +6,7 @@ const NewNoteForm: React.FC = () => {
         onTitleChange,
         onDescriptionChange,
         onSubmit,
+        requestError,
     } = useNewNoteForm();
 
     return (
@@ -25,6 +26,8 @@ const NewNoteForm: React.FC = () => {
                 </label>
 
                 <button className="border-1 px-2 py-1 cursor-pointer" type="submit">Add note</button>
+
+                {requestError ? <p>{requestError.message}</p> : null}
             </form>
         </div>
     );

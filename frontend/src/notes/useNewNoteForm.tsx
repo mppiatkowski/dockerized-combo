@@ -51,6 +51,7 @@ const useNewNoteForm = () => {
         onTitleChange,
         onDescriptionChange,
         onSubmit,
+        requestError: mutation.error,
     };
 }
 

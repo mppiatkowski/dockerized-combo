@@ -14,45 +14,34 @@ export type NoteBody = {
 }
 
 export const fetchAllNotes = async (): Promise<Note[]> => {
-    try {
-        const response = await fetch(`${URL}/notes`, {
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+    const response = await fetch(`${URL}/notes`, {
+        headers: {
+            'Content-Type': 'application/json'
         }
+    });
 
-        const data = await response.json()
-        return data;
-        
-    } catch (error) {
-        console.error('fetchAllNotes failed', getErrorMessage(error));
-        return [];
+    if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
     }
+
+    const data = await response.json()
+    return data;
 };
 
 export const addNote = async (noteBody: NoteBody): Promise<Note[]> => {
-    try {
-        const response = await fetch(`${URL}/notes`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(noteBody),
-        });
+    const response = await fetch(`${URL}/notes`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(noteBody),
+    });
 
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
-        const data = await response.json()
-        return data;
-        
-    } catch (error) {
-        console.error('addNote failed', getErrorMessage(error));
-        return [];
+    if (!response.ok) {
+        const errorData = await response.text();
+        throw new Error(`Error while trying to save: ${errorData}` || `HTTP error! Status: ${response.status}`);
     }
+
+    const data = await response.json()
+    return data;
 };
