@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState, type FormEvent } from "react";
 import { addNote } from "../utils/fetchService";
 import { queryKeys } from "../utils/queryKeys";
+import { noteSchema } from "../utils/noteSchema";
 
 const useNewNoteForm = () => {
     const queryClient = useQueryClient();
@@ -10,6 +11,8 @@ const useNewNoteForm = () => {
         title: '',
         description: '',
     })
+
+    const [validationError, setValidationError] = useState<string | null>(null);
 
     const mutation = useMutation({
         mutationFn: ({ title, description }: { title: string, description: string }) => {
@@ -40,10 +43,15 @@ const useNewNoteForm = () => {
 
     const onSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        mutation.mutate({
-            title: userInput.title,
-            description: userInput.description,
-        });
+        setValidationError(null);
+
+        const parseResult = noteSchema.safeParse(userInput);
+        if (!parseResult.success) {
+            setValidationError(parseResult.error.errors[0].message);
+            return;
+        }
+
+        mutation.mutate(userInput);
     };
 
     return {
@@ -51,6 +59,7 @@ const useNewNoteForm = () => {
         onTitleChange,
         onDescriptionChange,
         onSubmit,
+        validationError,
         requestError: mutation.error,
     };
 }
