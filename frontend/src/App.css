@@ -6,3 +6,9 @@
   margin: 0 auto;
   padding: 2rem;
 }
+
+input {
+  background: var(--color-gray-200);
+  color: var(--color-gray-900);
+  padding: 2px;
+}

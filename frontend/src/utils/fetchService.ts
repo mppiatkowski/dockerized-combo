@@ -8,6 +8,11 @@ export type Note = {
     description: string;
 }
 
+export type NoteBody = {
+    title: string;
+    description: string;
+}
+
 export const fetchAllNotes = async (): Promise<Note[]> => {
     try {
         const response = await fetch(`${URL}/notes`, {
@@ -24,7 +29,30 @@ export const fetchAllNotes = async (): Promise<Note[]> => {
         return data;
         
     } catch (error) {
-        console.error('Fetch failed', getErrorMessage(error));
+        console.error('fetchAllNotes failed', getErrorMessage(error));
+        return [];
+    }
+};
+
+export const addNote = async (noteBody: NoteBody): Promise<Note[]> => {
+    try {
+        const response = await fetch(`${URL}/notes`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(noteBody),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const data = await response.json()
+        return data;
+        
+    } catch (error) {
+        console.error('addNote failed', getErrorMessage(error));
         return [];
     }
 };
