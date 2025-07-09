@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
+
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/notes")
@@ -15,7 +17,9 @@ public class NotesController {
     }
 
     @PostMapping
-    public Note addNote(@RequestBody Note note) {
+    public Note addNote(@Valid @RequestBody Note note) {
+        note.setTitle(SanitizationUtils.sanitize(note.getTitle()));
+        note.setDescription(SanitizationUtils.sanitize(note.getDescription()));
         return notesRepository.save(note);
     }
 
@@ -32,11 +36,11 @@ public class NotesController {
     }
 
     @PutMapping("/{id}")
-    Note replaceEmployee(@RequestBody Note newNote, @PathVariable("id") Long id) {
+    Note replaceEmployee(@Valid @RequestBody Note newNote, @PathVariable("id") Long id) {
         return notesRepository.findById(id)
         .map(note -> {
-            note.setTitle(newNote.getTitle());
-            note.setDescription(newNote.getDescription());
+            note.setTitle(SanitizationUtils.sanitize(newNote.getTitle()));
+            note.setDescription(SanitizationUtils.sanitize(newNote.getDescription()));
             return notesRepository.save(note);
         })
         .orElseGet(() -> notesRepository.save(newNote));
