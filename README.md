@@ -8,3 +8,5 @@ docker-compose up --build
 
 In /frontend there is FE: React project
 In /backend there is BE: JAVA project
+
+To check frontend open http://localhost:5173
