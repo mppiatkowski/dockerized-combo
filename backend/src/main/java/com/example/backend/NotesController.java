@@ -36,7 +36,7 @@ public class NotesController {
     }
 
     @PutMapping("/{id}")
-    Note replaceEmployee(@Valid @RequestBody Note newNote, @PathVariable("id") Long id) {
+    Note replaceNote(@Valid @RequestBody Note newNote, @PathVariable("id") Long id) {
         return notesRepository.findById(id)
         .map(note -> {
             note.setTitle(SanitizationUtils.sanitize(newNote.getTitle()));
